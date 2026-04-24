@@ -13,3 +13,9 @@
 - Zod
 - Cookie
 
+## Instalacion
+
+```bash
+    npm install
+    npm run dev
+```

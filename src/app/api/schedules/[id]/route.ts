@@ -5,9 +5,9 @@ import { cookies } from "next/headers";
 
 export async function PATCH(
     request: Request,
-    { params } : { params: { id: string } }
+    { params } : { params: Promise<{ id: string }> }
 ) {
-    const id = params.id;
+    const { id } = await params;
 
     const cookieStore = await cookies();
     const token = cookieStore.get("auth-token")?.value;
@@ -46,9 +46,9 @@ export async function PATCH(
 
 export async function GET(
     request: Request,
-    { params } : { params: { id: string } }
+    { params } : { params: Promise<{ id: string }> }
 ) {
-    const id = params.id;
+    const { id } = await params;
 
     const cookieStore = await cookies();
     const token = cookieStore.get("auth-token")?.value;

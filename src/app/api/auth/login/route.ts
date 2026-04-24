@@ -34,7 +34,15 @@ export async function POST(request: Request) {
     });
 
     const response = NextResponse.json(
-      { message: "Login exitoso", user: { id: user.id, email: user.email, role: user.role } },
+      { 
+        message: "Login exitoso", 
+        user: { 
+          id: user.id, 
+          email: user.email, 
+          role: user.role,
+          name: user.name 
+        } 
+      },
       { status: 200 }
     );
 

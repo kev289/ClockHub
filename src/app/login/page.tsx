@@ -34,37 +34,37 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 p-4">
-      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md transform transition-all hover:scale-[1.01]">
-        <h1 className="text-3xl font-extrabold text-gray-800 text-center mb-2">ClockHub</h1>
-        <p className="text-gray-500 text-center mb-8">Bienvenido de nuevo</p>
+    <div className="min-h-screen flex items-center justify-center bg-black p-4">
+      <div className="bg-zinc-950 border border-red-900/30 p-8 rounded-2xl shadow-2xl w-full max-w-md transform transition-all hover:scale-[1.01]">
+        <h1 className="text-4xl font-black text-red-600 text-center mb-2 uppercase tracking-tighter italic">ClockHub</h1>
+        <p className="text-gray-500 text-center mb-8 font-medium">Panel de Autenticación</p>
 
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-3 mb-6 rounded">
+          <div className="bg-red-950/50 border border-red-600 text-red-500 p-3 mb-6 rounded text-sm text-center font-bold">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+            <label className="block text-xs font-black text-red-500 mb-1 uppercase tracking-widest">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="text-black w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              className="text-white bg-zinc-900 w-full px-4 py-3 rounded-lg border border-red-900/50 focus:ring-2 focus:ring-red-600 focus:border-transparent outline-none transition-all placeholder-gray-600"
               placeholder="tu@email.com"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Contraseña</label>
+            <label className="block text-xs font-black text-red-500 mb-1 uppercase tracking-widest">Contraseña</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="text-black w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              className="text-white bg-zinc-900 w-full px-4 py-3 rounded-lg border border-red-900/50 focus:ring-2 focus:ring-red-600 focus:border-transparent outline-none transition-all placeholder-gray-600"
               placeholder="••••••••"
               required
             />
@@ -72,15 +72,15 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-indigo-500/30 transition-all duration-300"
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-black py-3 rounded-lg shadow-lg hover:shadow-red-600/30 transition-all duration-300 uppercase tracking-widest mt-4"
           >
             Iniciar Sesión
           </button>
         </form>
 
-        <p className="mt-8 text-center text-sm text-gray-600">
+        <p className="mt-8 text-center text-sm text-gray-500">
           ¿No tienes cuenta?{" "}
-          <Link href="/register" className="text-indigo-600 font-bold hover:underline">
+          <Link href="/register" className="text-red-500 font-bold hover:text-red-400 transition-colors">
             Regístrate aquí
           </Link>
         </p>

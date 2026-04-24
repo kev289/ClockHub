@@ -2,8 +2,14 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { UserPayload, verifyToken } from "@/lib/auth";
 import { cookies } from "next/headers";
+import { z } from "zod";
 
-// --- GET: Listar horarios (Con filtro por Rol) ---
+const scheduleSchema = z.object({
+  startTime: z.string(), 
+  endTime: z.string(),
+  userId: z.string().optional(),
+});
+
 export async function GET(request: Request) {
   try {
     const cookieStore = await cookies();
@@ -14,7 +20,6 @@ export async function GET(request: Request) {
 
     let schedules;
 
-    // RBAC: Los empleados solo ven los suyos, Admins y Managers ven todos
     if (decoded.role === "EMPLOYEE") {
       schedules = await prisma.schedule.findMany({
         where: { userId: decoded.id },
@@ -34,7 +39,6 @@ export async function GET(request: Request) {
   }
 }
 
-// --- POST: Crear horario (Con detección de conflictos y Auditoría) ---
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
@@ -43,12 +47,20 @@ export async function POST(request: Request) {
     if (!token) return NextResponse.json({ message: "No autorizado" }, { status: 401 });
     const decoded = verifyToken(token) as UserPayload;
 
-    const { startTime, endTime, userId: targetUserId } = await request.json();
+    const body = await request.json();
 
-    // Validar que un Employee no intente crear horarios para otros (Seguridad RBAC)
+    const validation = scheduleSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { message: "Datos inválidos", errors: validation.error.format() },
+        { status: 400 }
+      );
+    }
+
+    const { startTime, endTime, userId: targetUserId } = validation.data;
+
     const finalUserId = decoded.role === "EMPLOYEE" ? decoded.id : (targetUserId || decoded.id);
 
-    // 1. Detectar conflictos
     const conflict = await prisma.schedule.findFirst({
       where: {
         userId: finalUserId,
@@ -62,12 +74,11 @@ export async function POST(request: Request) {
 
     if (conflict) {
       return NextResponse.json(
-        { message: "Conflicto de horario: El usuario ya tiene un turno en este rango." },
+        { message: "Ya existe un horario que se cruza con este rango." },
         { status: 400 }
       );
     }
 
-    // 2. Crear el horario
     const newSchedule = await prisma.schedule.create({
       data: {
         startTime: new Date(startTime),
@@ -77,18 +88,17 @@ export async function POST(request: Request) {
       },
     });
 
-    // 3. REGISTRO DE AUDITORÍA (Obligatorio en tu simulacro)
     await prisma.auditLog.create({
       data: {
         action: "CREATE_SCHEDULE",
-        userId: decoded.id, // Quién hizo la acción
-        details: `Horario creado para el usuario ${finalUserId} desde ${startTime} hasta ${endTime}`,
+        userId: decoded.id,
+        details: `Nuevo horario para el usuario ${finalUserId} : ${startTime} - ${endTime}`,
       },
     });
 
     return NextResponse.json(newSchedule, { status: 201 });
   } catch (error) {
-     console.error(error);
-    return NextResponse.json({ message: "Error al crear el horario" }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ message: "Error interno" }, { status: 500 });
   }
 }

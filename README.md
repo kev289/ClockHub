@@ -12,4 +12,4 @@
 - JWT
 - Zod
 - Cookie
-- Lucide-react
+

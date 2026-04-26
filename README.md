@@ -19,3 +19,8 @@
     npm install
     npm run dev
 ```
+
+## Continuacion
+
+Implementar un CRUD anidado que altere otro CRUD
+Perfeccionar uso de JWT, ZOD, HASHEOS Y uso de prisma

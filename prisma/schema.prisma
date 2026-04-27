@@ -44,8 +44,21 @@ model Schedule {
   status    ScheduleStatus @default(PENDING)
   userId    String
   user      User           @relation(fields: [userId], references: [id])
+  tasks     Task[]         // Nueva relación
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  isCompleted Boolean  @default(false)
+  isCritical  Boolean  @default(false)
+  scheduleId  String
+  schedule    Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model AuditLog {

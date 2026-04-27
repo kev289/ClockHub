@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 
 export async function PATCH(
     request: Request,
-    { params } : { params: Promise<{ id: string }> }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
 
@@ -22,7 +22,9 @@ export async function PATCH(
         where: { id },
     });
 
-    if (!schedule) return NextResponse.json({ message: "Horario no encontrado" }, { status: 404 });
+    if (!schedule) {
+        return NextResponse.json({ message: "Horario no encontrado" }, { status: 404 });
+    }
 
     if (decoded.role === "EMPLOYEE" && schedule.userId !== decoded.id) {
         return NextResponse.json({ message: "No autorizado" }, { status: 403 });
@@ -35,9 +37,9 @@ export async function PATCH(
 
     await prisma.auditLog.create({
         data: {
-            action: "UPDATE_SCHEDULE",
-            userId: decoded.id,
-            details: `Horario ${id} actualizado a ${status}`,
+          action: "UPDATE_SCHEDULE",
+          userId: decoded.id,
+          details: `Horario ${id} actualizado a ${status}`,
         },
     });
 

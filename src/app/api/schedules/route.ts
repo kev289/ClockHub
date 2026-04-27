@@ -92,7 +92,7 @@ export async function POST(request: Request) {
       data: {
         action: "CREATE_SCHEDULE",
         userId: decoded.id,
-        details: `Nuevo horario para el usuario ${finalUserId} : ${startTime} - ${endTime}`,
+        details: `Se ha registrado un nuevo turno de trabajo.`,
       },
     });
 

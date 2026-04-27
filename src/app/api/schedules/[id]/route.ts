@@ -39,7 +39,7 @@ export async function PATCH(
         data: {
           action: "UPDATE_SCHEDULE",
           userId: decoded.id,
-          details: `Horario ${id} actualizado a ${status}`,
+          details: `El horario ha sido marcado como ${status === 'CANCELLED' ? 'cancelado' : status.toLowerCase()}.`,
         },
     });
 
